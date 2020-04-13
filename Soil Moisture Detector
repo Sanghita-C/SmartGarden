@@ -16,3 +16,20 @@ void loop() {
    delay(1000);
 
    }
+/*  Working of the sensor
+
+The soil moisture sensor consists of two probes which are used to measure the volumetric content of water. The two probes allow the current
+to pass through the soil and then it gets the resistance value to measure the moisture value.
+When there is more water, the soil will conduct more electricity which means that there will be less resistance. Therefore, the moisture 
+level will be higher. Dry soil conducts electricity poorly, so when there will be less water, then the soil will conduct less electricity
+which means that there will be more resistance. Therefore, the moisture level will be lower
+
+Mapping of sensor values
+To connect the sensor in the analog mode, we will need to use the analog output of the sensor. When taking the analog output from thesoil
+moisture sensor FC-28, the sensor gives us the value from 0-1023. The moisture is measured in percentage, so we will map these values 
+from 0 -100 and then we will show these values on the serial monitor.You can further set different ranges of the moisture values and 
+turn on or off the water pump according to it
+
+we will map the output values to 0-100, because the moisture is measured in percentage. When we took the readings from the dry soil, 
+then the sensor value was 550 and in the wet soil, the sensor value was 10. So, we mapped these values to get the moisture.
+*/

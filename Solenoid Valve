@@ -1,0 +1,29 @@
+void setup() {
+     pinMode(9, OUTPUT);
+     pinMode(2, INPUT);
+     pinMode(3, INPUT);
+}
+
+void loop() {
+if(digitalRead(2)==HIGH)
+{
+     digitalWrite(9,HIGH);
+     delay(1000);
+}
+else if(digitalRead(3)==HIGH)
+{
+     digitalWrite(9,LOW);
+     delay(1000);
+}
+}
+
+Firstly we have defined digital pin 9 as output for the solenoid and digital pin 2 and 3 as input pins for buttons.
+Now in void loop, turn on or off the solenoid based on status of digital pin 2 and 3, where two push buttons are connected to turn on and
+off the solenoid
+
+When button 1 is pressed, Arduino send a HIGH logic to gate terminal of the MOSFET IRF540, connected on the 9th pin of the Arduino.
+As IRF540 is an N-Channel MOSFET, so when its gate terminal gets HIGH, it allow the flow of current from drain to source and turn the 
+solenoid on.
+
+Similarly, when we press the button 2, Arduino sends a LOW logic to the gate terminal of the MOSFET IRF540 which makes the solenoid turn
+off.

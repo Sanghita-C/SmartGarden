@@ -1,0 +1,66 @@
+#include "DHT.h"
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN,DHTTYPE);
+
+int moistsensor_pin = A0;
+int soilMoisture ;
+int valvePin=9;                        //the pin that will control the opening and closing of valve;
+
+const unsigned long long timer=10800;     
+ // timing control: After every 1hr the humidity level will be checked and valve will be opened or closed according to soil moisture content. 
+
+unsigned long long initialTime= 0;
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  pinMode(valvePin,OUTPUT);
+}
+
+void loop() {
+  unsigned long long currTime= millis();
+  if(currTime-initialTime >= timer)
+  {
+     	delay(2000);                 //wait a few seconds between measurement
+  	float humidity=dht.readHumidity();
+  	float temperature= dht.readTemperature();
+  	if(isnan(humidity)||isnan(temperature)) 	//isnan. Returns whether x is a NaN     
+//(Not-A-Number) value                                                                                                                                                                   
+{
+   	 Serial.println("Failed to read from DHT sensor");
+   	 return;
+  	}
+ 	 Serial.print("Humidity: ");
+  	Serial.print(humidity);
+  	Serial.print("%\t");
+  	Serial.print ("Temperature: ");
+  	Serial.print (temperature);
+ 	 Serial.print (" *C ");
+
+//measuring of soil moisture
+   	delay(2000);
+   	soilMoisture= analogRead(moistsensor_pin);
+   	soilMoisture = map(soilMoisture,550,0,0,100); //converting the value to percentage
+   	Serial.print("Moisture : ");
+   	Serial.print(soilMoisture);
+   	Serial.println("%");
+
+   /*  MAPPING
+    *   Mapping of sensor values
+To connect the sensor in the analog mode, we will need to use the analog output of the sensor. When taking the analog output from the soil moisture sensor FC-28, the sensor gives us the value from 0-1023. The moisture is measured in percentage, so we will map these values from 0 -100 and then we will show these values on the serial monitor. You can further set different ranges of the moisture values and turn on or off the water pump according to it . We will map the output values to 0-100, because the moisture is measured in percentage. When we took the readings from the dry soil, then the sensor value was 550 and in the wet soil, the sensor value was 10. So, we mapped these values to get the moisture. 
+
+ */
+
+   	//valve control
+   	if(soilMoisture<25)
+   	{	while(soilMoisture<40)
+   		 {	digitalWrite(valvePin,HIGH);delay(1000);	
+                                      soilMoisture= analogRead(moistsensor_pin);
+   	                     soilMoisture = map(soilMoisture,550,0,0,100);
+                          }
+   	}	
+   	else
+   	{ 	digitalWrite(valvePin,LOW); delay(1000); 	}
+   	initialTime= currTime;
+    }
